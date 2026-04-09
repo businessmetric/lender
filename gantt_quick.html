@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Хранилище данных и отчетность: диаграмма проекта</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.css" />
+  <style>
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 16px; background: #f6f8fb; color: #1f2937; }
+    h1 { margin: 0 0 8px; font-size: 22px; }
+    .hint { margin: 0 0 12px; color: #4b5563; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
+    .toolbar .group-label {
+      font-size: 12px;
+      color: #4b5563;
+      font-weight: 600;
+      padding: 0 2px;
+    }
+    .toolbar .sep {
+      width: 1px;
+      height: 26px;
+      background: #d1d5db;
+      margin: 0 2px;
+    }
+    .toolbar .control {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      background: #ffffff;
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .toolbar input[type="datetime-local"] {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 13px;
+      color: #111827;
+      background: #fff;
+    }
+    .toolbar select {
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 13px;
+      color: #111827;
+      background: #fff;
+      min-width: 220px;
+    }
+    button {
+      border: 1px solid #cbd5e1; background: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer;
+    }
+    button:hover { background: #eef2ff; }
+    .toolbar-help {
+      margin: 0 0 12px;
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fff;
+      color: #374151;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .timeline-dates {
+      margin: 0 0 12px;
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fff;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .timeline-dates .label {
+      font-size: 12px;
+      color: #374151;
+      margin-right: 2px;
+    }
+    .timeline-dates .date-chip {
+      font-size: 12px;
+      color: #1f2937;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 2px 8px;
+      white-space: nowrap;
+    }
+    .layout { display: grid; grid-template-columns: 1fr 320px; gap: 12px; align-items: start; }
+    .layout.panel-collapsed { grid-template-columns: 1fr; }
+    #gantt { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px; overflow: auto; }
+    .panel {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      position: sticky;
+      top: 8px;
+      min-height: 180px;
+    }
+    .panel h3 { margin: 0 0 8px; font-size: 16px; }
+    .panel .badge {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e0e7ff;
+      color: #3730a3;
+      margin-bottom: 8px;
+    }
+    .panel .row { margin: 4px 0; color: #374151; font-size: 13px; }
+    .panel .desc {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #1f2937;
+    }
+    .panel .subtasks {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed #d1d5db;
+      font-size: 13px;
+    }
+    .panel .subtasks-title {
+      margin: 0 0 6px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .panel .subtasks-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #1f2937;
+      line-height: 1.45;
+    }
+    .panel .info-title {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #d1d5db;
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .panel.hidden { display: none; }
+    .footer { margin-top: 10px; color: #6b7280; font-size: 13px; }
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .panel { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Внедрение хранилища данных и отчетности (10 недель)</h1>
+  <p class="hint">Быстрый режим: наведи на задачу и смотри детали справа. Так работает плавнее и читается лучше.</p>
+
+  <div class="toolbar">
+    <span class="group-label">Планирование</span>
+    <span class="control">
+      <label for="projectStartInput">Старт проекта:</label>
+      <input id="projectStartInput" type="datetime-local" value="2026-04-13T09:00" />
+    </span>
+    <button onclick="applyProjectStart()">Применить старт</button>
+    <button onclick="resetProjectStart()">Сброс базового плана</button>
+
+    <span class="sep"></span>
+    <span class="group-label">Структура задач</span>
+    <span class="control">
+      <label for="parentLevelSelect">Родительская задача:</label>
+      <select id="parentLevelSelect"></select>
+    </span>
+    <button onclick="collapseSelectedParent()">Свернуть дочерние</button>
+    <button onclick="expandSelectedParent()">Раскрыть дочерние</button>
+    <button onclick="collapseAllChildren()">Свернуть все дочерние</button>
+    <button onclick="expandAllChildren()">Раскрыть все дочерние</button>
+
+    <span class="sep"></span>
+    <span class="group-label">Вид графика</span>
+    <button onclick="setView('Day')">День</button>
+    <button onclick="setView('Week')">Неделя</button>
+    <button onclick="setView('Month')">Месяц</button>
+    <button onclick="resetToday()">Сегодня слева</button>
+
+    <span class="sep"></span>
+    <span class="group-label">Панель</span>
+    <button id="togglePanelBtn" onclick="toggleDetailsPanel()">Скрыть панель</button>
+  </div>
+
+  <div class="toolbar-help">
+    <strong>Что это:</strong> интерактивный график проекта с этапами и подэтапами.<br />
+    <strong>Как пользоваться:</strong> наведи на задачу, чтобы увидеть детали справа; выбери родительскую задачу и сворачивай или раскрывай дочерние; при необходимости меняй дату старта проекта и масштаб день/неделя/месяц.
+  </div>
+
+  <div class="timeline-dates" id="timelineDates"></div>
+
+  <div class="layout">
+    <div id="gantt"></div>
+    <aside class="panel" id="detailsPanel">
+      <h3>Детали задачи</h3>
+      <div class="row"><strong>Что это:</strong> панель с составом и параметрами выбранной задачи.</div>
+      <div class="info-title">Как пользоваться</div>
+      <div class="row">1. Наведи курсор на задачу в диаграмме.</div>
+      <div class="row">2. Смотри сроки, зависимости и состав этапа в этой панели.</div>
+      <div class="row">3. Используй кнопки вверху, чтобы свернуть или раскрыть дочерние задачи.</div>
+    </aside>
+  </div>
+  <div class="footer">Источник задач: gantt_tasks.csv (можно импортировать в Excel/Google Sheets/Smartsheet).</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.min.js"></script>
+  <script>
+    const taskMeta = {
+      m1: { owner: 'PM', track: 'Управление', details: 'Этап состоит из: запуска проекта, фиксации ролей, календаря статусов и правил коммуникации.', major: true },
+      pm1: { owner: 'PM', track: 'Управление', details: 'Этап состоит из: еженедельных статусов, риск-ревью, обновления плана и контроля зависимостей.', major: true },
+      a1: { owner: 'PM/BA', track: 'Аналитика', details: 'Этап состоит из: матрицы доступов, интервью, протокола проблем и приоритетов.' },
+      a1_1: { owner: 'PM/BA', track: 'Аналитика', details: 'Сбор и согласование перечня доступов к источникам и текущей отчетности.' },
+      a1_2: { owner: 'BA', track: 'Аналитика', details: 'Интервью с владельцами процессов: цели, боли, ожидания по метрикам и отчетам.' },
+      a1_3: { owner: 'BA', track: 'Аналитика', details: 'Формализация проблем и приоритетов в протокол обследования.' },
+      a2: { owner: 'BA', track: 'Аналитика', details: 'Этап состоит из: карты пути клиента, карты событий, словаря метрик и формул KPI.', major: true },
+      a2_1: { owner: 'BA', track: 'Аналитика', details: 'Декомпозиция пути клиента по шагам воронки и контрольным точкам.' },
+      a2_2: { owner: 'BA/DE', track: 'Аналитика', details: 'Карта событий с требованиями к трекингу, параметрам и источникам.' },
+      a2_3: { owner: 'BA/BI', track: 'Аналитика', details: 'Описание формул, гранулярности и правил расчета KPI.' },
+      a3: { owner: 'BA/PM', track: 'Аналитика', details: 'Этап состоит из: постановки задач на доработку источников и правил приемки.' },
+      a3_1: { owner: 'BA', track: 'Аналитика', details: 'Подготовка ТЗ на доработки веба и мобильного приложения.' },
+      a3_2: { owner: 'BA/Маркетинг', track: 'Аналитика', details: 'Подготовка ТЗ по UTM и передаче данных рекламных каналов.' },
+      a3_3: { owner: 'BA/DE', track: 'Аналитика', details: 'Фиксация правил приемки доработок по данным.' },
+      m2: { owner: 'BA/Бизнес', track: 'Аналитика', details: 'Фиксация метрик и KPI как основы для разработки.' },
+
+      i0: { owner: 'DE/Инфра', track: 'Платформа', details: 'Этап состоит из: архитектуры хранилища, окон обновления и контрольного листа.', major: true },
+      i0_1: { owner: 'DE', track: 'Платформа', details: 'Описание целевой схемы хранилища и потоков данных.' },
+      i0_2: { owner: 'PM/DE', track: 'Платформа', details: 'Определение окон обновления и контрольного листа поставки.' },
+
+      i1: { owner: 'Инфра', track: 'Платформа', details: 'Этап состоит из: подготовки ОС, усиления безопасности и проверки контрольного листа.' },
+      i1_1: { owner: 'Инфра', track: 'Платформа', details: 'Создание пользователей, базовые системные настройки и права.' },
+      i1_2: { owner: 'Инфра', track: 'Платформа', details: 'Сетевые правила, ограничение SSH и закрытие лишнего доступа.' },
+      i1_3: { owner: 'Инфра', track: 'Платформа', details: 'Контрольная проверка минимальных требований безопасности.' },
+      i2: { owner: 'Инфра', track: 'Платформа', details: 'Этап состоит из: настройки Docker/Compose, сетей, томов хранения и секретов.' },
+      i2_1: { owner: 'Инфра', track: 'Платформа', details: 'Схема сетей сервисов и стратегия томов хранения.' },
+      i2_2: { owner: 'Инфра', track: 'Платформа', details: 'Настройка переменных окружения и защищенного хранения секретов.' },
+      i2_3: { owner: 'Инфра', track: 'Платформа', details: 'Проверка запуска контейнеров и связности сервисов.' },
+      i3: { owner: 'DE/DevOps', track: 'Платформа', details: 'Этап состоит из: настройки ClickHouse, Airflow и пробного запуска DAG.', major: true },
+      i3_1: { owner: 'DE', track: 'Платформа', details: 'Создание базовой схемы и RAW таблиц в ClickHouse.' },
+      i3_2: { owner: 'DE/DevOps', track: 'Платформа', details: 'Настройка Airflow connections, переменных и каркаса DAG.' },
+      i3_3: { owner: 'DE/DevOps', track: 'Платформа', details: 'Пробный прогон и проверка логов, ретраев и расписаний.' },
+
+      d1: { owner: 'DE', track: 'Данные', details: 'Этап состоит из: подключения Метрики, AppMetrica и продуктовой БД.' },
+      d1_1: { owner: 'DE', track: 'Данные', details: 'Настройка подключения и первичной загрузки из Яндекс.Метрики.' },
+      d1_2: { owner: 'DE', track: 'Данные', details: 'Подключение AppMetrica и проверка структуры событий.' },
+      d1_3: { owner: 'DE', track: 'Данные', details: 'Подключение продуктовой БД и проверка инкрементального чтения.' },
+      d2: { owner: 'DE', track: 'Данные', details: 'Этап состоит из: загрузок сырого и промежуточного слоев, нормализации справочников.', major: true },
+      d2_1: { owner: 'DE', track: 'Данные', details: 'Инкрементальные загрузки сырого слоя с контролем метки обновления.' },
+      d2_2: { owner: 'DE', track: 'Данные', details: 'Очистка промежуточного слоя, удаление дублей и стандартизация форматов.' },
+      d2_3: { owner: 'DE', track: 'Данные', details: 'Нормализация справочников и унификация ключевых событий.' },
+      d3: { owner: 'DE', track: 'Данные', details: 'Этап состоит из: промежуточных моделей, витрин и оптимизации dbt.', major: true },
+      d3_1: { owner: 'DE', track: 'Данные', details: 'Построение промежуточного слоя и базовых тестов dbt.' },
+      d3_2: { owner: 'DE/BI', track: 'Данные', details: 'Создание витрин по воронке, когортам, финансам и качеству.' },
+      d3_3: { owner: 'DE', track: 'Данные', details: 'Оптимизация моделей и обновление документации dbt.' },
+      d4: { owner: 'DE/QA', track: 'Данные', details: 'Этап состоит из: тестов полноты, сверки метрик и оповещений о задержках.' },
+      d4_1: { owner: 'DE/QA', track: 'Данные', details: 'Проверки полноты, уникальности и непротиворечивости данных.' },
+      d4_2: { owner: 'DE/BA', track: 'Данные', details: 'Сверка итоговых метрик с источниками и согласованными расчетами.' },
+      d4_3: { owner: 'DE/Инфра', track: 'Данные', details: 'Настройка контроля сроков обновления, оповещений и регламента реакции.' },
+
+      b1: { owner: 'BI Analyst', track: 'BI', details: 'Этап состоит из: проектирования экранов, сборки KPI и внутреннего ревью BI v1.', major: true },
+      b1_1: { owner: 'BI Analyst', track: 'BI', details: 'Структура дашбордов, фильтры, разрезы и навигация.' },
+      b1_2: { owner: 'BI Analyst', track: 'BI', details: 'Сборка визуализаций и подключение метрик из витрин.' },
+      b1_3: { owner: 'BI/BA', track: 'BI', details: 'Внутреннее ревью качества визуализаций и бизнес-логики.' },
+      m3: { owner: 'BI/Бизнес', track: 'BI', details: 'Промежуточная демонстрация BI v1.' },
+      b2: { owner: 'QA/DE', track: 'BI', details: 'Этап состоит из: сквозных тест-кейсов и исправления интеграционных дефектов.' },
+      b2_1: { owner: 'QA/DE', track: 'BI', details: 'Проверка цепочки источник -> витрина -> BI по контрольным сценариям.' },
+      b2_2: { owner: 'DE/BI', track: 'BI', details: 'Исправление найденных дефектов и повторная валидация.' },
+      b3: { owner: 'Бизнес/PM', track: 'BI', details: 'Этап состоит из: UAT чек-листа, сессий приемки и закрытия замечаний.' },
+      b3_1: { owner: 'PM/BA', track: 'BI', details: 'Подготовка UAT сценариев, критериев и чек-листа приемки.' },
+      b3_2: { owner: 'Бизнес/BA', track: 'BI', details: 'Проведение приемочных сессий с бизнес-пользователями.' },
+      b3_3: { owner: 'DE/BI', track: 'BI', details: 'Закрытие замечаний по итогам UAT и финальная проверка.' },
+      m4: { owner: 'Бизнес', track: 'BI', details: 'Подписанный результат UAT.' },
+
+      s0: { owner: 'Инфра/DE', track: 'Запуск', details: 'Этап состоит из: мониторинга загрузок, оповещений и порядка реакции на инциденты.' },
+      s0_1: { owner: 'DE', track: 'Запуск', details: 'Настройка контроля загрузок, задержек и ошибок по источникам.' },
+      s0_2: { owner: 'Инфра', track: 'Запуск', details: 'Настройка оповещений в почту и мессенджер.' },
+      s0_3: { owner: 'PM/Инфра', track: 'Запуск', details: 'Определение порядка реакции на инциденты.' },
+      s1: { owner: 'Инфра/DE', track: 'Запуск', details: 'Этап состоит из: подготовки регламента и контрольного восстановления.' },
+      s1_1: { owner: 'Инфра/DE', track: 'Запуск', details: 'Операционный регламент по запуску, мониторингу и инцидентам.' },
+      s1_2: { owner: 'Инфра', track: 'Запуск', details: 'Политика резервного копирования и расписание проверок.' },
+      s1_3: { owner: 'DevOps/DE', track: 'Запуск', details: 'Тест восстановления и фиксация времени RTO/RPO.' },
+      m5: { owner: 'PM', track: 'Запуск', details: 'Переход в промышленный режим.' },
+      s2: { owner: 'PM/Команда', track: 'Запуск', details: 'Передача в операционное сопровождение и SLA-регламент.' }
+    };
+
+    const baselineProjectStart = '2026-04-13';
+
+    const baseTasks = [
+      { id: 'm1', name: 'Старт проекта и планирование', start: '2026-04-13', end: '2026-04-13', progress: 100, dependencies: '' },
+      { id: 'pm1', name: 'Еженедельный статус и риск-ревью', start: '2026-04-13', end: '2026-06-19', progress: 35, dependencies: 'm1' },
+
+      { id: 'a1', name: 'Сбор доступов и интервью', start: '2026-04-13', end: '2026-04-17', progress: 100, dependencies: 'm1' },
+      { id: 'a1_1', name: 'Матрица доступов и заявки', start: '2026-04-13', end: '2026-04-14', progress: 100, dependencies: 'a1' },
+      { id: 'a1_2', name: 'Интервью по процессам и отчетам', start: '2026-04-15', end: '2026-04-16', progress: 100, dependencies: 'a1_1' },
+      { id: 'a1_3', name: 'Протокол проблем и приоритетов', start: '2026-04-17', end: '2026-04-17', progress: 100, dependencies: 'a1_2' },
+      { id: 'a2', name: 'Карта пути клиента и словарь метрик', start: '2026-04-20', end: '2026-05-01', progress: 70, dependencies: 'a1' },
+      { id: 'a2_1', name: 'CJM по этапам воронки', start: '2026-04-20', end: '2026-04-23', progress: 85, dependencies: 'a1' },
+      { id: 'a2_2', name: 'Карта событий и требования трекинга', start: '2026-04-24', end: '2026-04-28', progress: 70, dependencies: 'a2_1' },
+      { id: 'a2_3', name: 'Словарь метрик и формулы KPI', start: '2026-04-29', end: '2026-05-01', progress: 60, dependencies: 'a2_2' },
+      { id: 'a3', name: 'Постановка задач на доработку источников', start: '2026-05-02', end: '2026-05-06', progress: 40, dependencies: 'a2_3' },
+      { id: 'a3_1', name: 'ТЗ на доработки веба и мобильного приложения', start: '2026-05-02', end: '2026-05-03', progress: 45, dependencies: 'a2_3' },
+      { id: 'a3_2', name: 'ТЗ по UTM и передаче рекламных данных', start: '2026-05-04', end: '2026-05-05', progress: 35, dependencies: 'a3_1' },
+      { id: 'a3_3', name: 'Правила приемки доработок по данным', start: '2026-05-06', end: '2026-05-06', progress: 40, dependencies: 'a3_2' },
+      { id: 'm2', name: 'Фиксация метрик и KPI', start: '2026-05-07', end: '2026-05-07', progress: 0, dependencies: 'a3' },
+
+      { id: 'i0', name: 'Архитектурное проектирование', start: '2026-04-20', end: '2026-04-22', progress: 65, dependencies: 'm1' },
+      { id: 'i0_1', name: 'Целевая схема хранилища и потоков данных', start: '2026-04-20', end: '2026-04-21', progress: 70, dependencies: 'm1' },
+      { id: 'i0_2', name: 'Окна обновления и контрольный лист поставки', start: '2026-04-22', end: '2026-04-22', progress: 60, dependencies: 'i0_1' },
+      { id: 'i1', name: 'Сервер и базовая безопасность', start: '2026-04-23', end: '2026-04-29', progress: 80, dependencies: 'i0' },
+      { id: 'i1_1', name: 'Подготовка ОС и пользователей', start: '2026-04-20', end: '2026-04-21', progress: 90, dependencies: 'm1' },
+      { id: 'i1_2', name: 'Сетевые правила и усиление SSH-доступа', start: '2026-04-22', end: '2026-04-23', progress: 75, dependencies: 'i1_1' },
+      { id: 'i1_3', name: 'Проверка контрольного листа безопасности', start: '2026-04-24', end: '2026-04-24', progress: 70, dependencies: 'i1_2' },
+      { id: 'i2', name: 'Docker Compose и секреты', start: '2026-04-30', end: '2026-05-06', progress: 60, dependencies: 'i1' },
+      { id: 'i2_1', name: 'Сети и стратегия томов хранения', start: '2026-04-27', end: '2026-04-28', progress: 70, dependencies: 'i1' },
+      { id: 'i2_2', name: 'Хранение секретов и профили окружения', start: '2026-04-29', end: '2026-04-30', progress: 60, dependencies: 'i2_1' },
+      { id: 'i2_3', name: 'Проверка развертывания контейнеров', start: '2026-05-01', end: '2026-05-01', progress: 50, dependencies: 'i2_2' },
+      { id: 'i3', name: 'ClickHouse и Airflow', start: '2026-05-07', end: '2026-05-13', progress: 30, dependencies: 'i2' },
+      { id: 'i3_1', name: 'Схема БД и сырой слой ClickHouse', start: '2026-05-07', end: '2026-05-09', progress: 40, dependencies: 'i2' },
+      { id: 'i3_2', name: 'Подключения Airflow и каркас процессов', start: '2026-05-10', end: '2026-05-12', progress: 30, dependencies: 'i3_1' },
+      { id: 'i3_3', name: 'Пробный запуск процессов и проверка журналов', start: '2026-05-13', end: '2026-05-13', progress: 20, dependencies: 'i3_2' },
+
+      { id: 'd1', name: 'Подключение источников (Метрика/AppM/продуктовая БД)', start: '2026-05-14', end: '2026-05-20', progress: 10, dependencies: 'i3' },
+      { id: 'd1_1', name: 'Подключение Яндекс.Метрики', start: '2026-05-11', end: '2026-05-12', progress: 20, dependencies: 'i3' },
+      { id: 'd1_2', name: 'Подключение AppMetrica', start: '2026-05-13', end: '2026-05-14', progress: 10, dependencies: 'd1_1' },
+      { id: 'd1_3', name: 'Подключение продуктовой БД', start: '2026-05-15', end: '2026-05-15', progress: 0, dependencies: 'd1_2' },
+      { id: 'd2', name: 'Сырой и промежуточный слои: загрузки и нормализация', start: '2026-05-21', end: '2026-06-03', progress: 0, dependencies: 'd1' },
+      { id: 'd2_1', name: 'Инкрементальные загрузки сырого слоя', start: '2026-05-18', end: '2026-05-21', progress: 0, dependencies: 'd1' },
+      { id: 'd2_2', name: 'Очистка и удаление дублей промежуточного слоя', start: '2026-05-22', end: '2026-05-26', progress: 0, dependencies: 'd2_1' },
+      { id: 'd2_3', name: 'Нормализация справочников и событий', start: '2026-05-27', end: '2026-05-29', progress: 0, dependencies: 'd2_2' },
+      { id: 'd3', name: 'dbt: промежуточный слой и витрины', start: '2026-06-04', end: '2026-06-17', progress: 0, dependencies: 'd2' },
+      { id: 'd3_1', name: 'Промежуточные модели и тесты', start: '2026-06-01', end: '2026-06-04', progress: 0, dependencies: 'd2' },
+      { id: 'd3_2', name: 'Витрины: воронка, когорты, финансы', start: '2026-06-05', end: '2026-06-10', progress: 0, dependencies: 'd3_1' },
+      { id: 'd3_3', name: 'Оптимизация и документация dbt', start: '2026-06-11', end: '2026-06-12', progress: 0, dependencies: 'd3_2' },
+      { id: 'd4', name: 'Тесты качества данных и контроль сроков обновления', start: '2026-06-04', end: '2026-06-17', progress: 0, dependencies: 'd2' },
+      { id: 'd4_1', name: 'Тесты полноты и уникальности', start: '2026-06-01', end: '2026-06-04', progress: 0, dependencies: 'd2' },
+      { id: 'd4_2', name: 'Сверка метрик с источниками', start: '2026-06-05', end: '2026-06-09', progress: 0, dependencies: 'd4_1' },
+      { id: 'd4_3', name: 'Мониторинг сроков обновления и оповещения', start: '2026-06-10', end: '2026-06-12', progress: 0, dependencies: 'd4_2' },
+
+      { id: 'b1', name: 'Панели и отчеты версии 1', start: '2026-05-08', end: '2026-05-21', progress: 45, dependencies: 'm2' },
+      { id: 'b1_1', name: 'Структура экранов и фильтры', start: '2026-05-05', end: '2026-05-08', progress: 60, dependencies: 'm2' },
+      { id: 'b1_2', name: 'Сборка визуализаций и KPI', start: '2026-05-09', end: '2026-05-14', progress: 40, dependencies: 'b1_1' },
+      { id: 'b1_3', name: 'Внутренняя проверка панели v1', start: '2026-05-15', end: '2026-05-16', progress: 30, dependencies: 'b1_2' },
+      { id: 'm3', name: 'Демонстрация отчетности v1', start: '2026-06-03', end: '2026-06-03', progress: 0, dependencies: 'b1' },
+      { id: 'b2', name: 'Интеграционное тестирование', start: '2026-06-18', end: '2026-06-24', progress: 0, dependencies: 'd3' },
+      { id: 'b2_1', name: 'Сквозные проверки источник-витрина-отчет', start: '2026-06-15', end: '2026-06-17', progress: 0, dependencies: 'd3' },
+      { id: 'b2_2', name: 'Исправление дефектов интеграции', start: '2026-06-18', end: '2026-06-19', progress: 0, dependencies: 'b2_1' },
+      { id: 'b3', name: 'Приемочные испытания с бизнесом', start: '2026-06-25', end: '2026-07-01', progress: 0, dependencies: 'b2' },
+      { id: 'b3_1', name: 'Сценарии приемки и чек-лист', start: '2026-06-22', end: '2026-06-23', progress: 0, dependencies: 'b2' },
+      { id: 'b3_2', name: 'Сессии приемки с бизнесом', start: '2026-06-24', end: '2026-06-25', progress: 0, dependencies: 'b3_1' },
+      { id: 'b3_3', name: 'Закрытие замечаний приемки', start: '2026-06-26', end: '2026-06-26', progress: 0, dependencies: 'b3_2' },
+      { id: 'm4', name: 'Подписанная приемка', start: '2026-07-02', end: '2026-07-02', progress: 0, dependencies: 'b3' },
+
+      { id: 's0', name: 'Мониторинг и уведомления', start: '2026-06-13', end: '2026-06-19', progress: 0, dependencies: 'd4_3' },
+      { id: 's0_1', name: 'Контроль загрузок и задержек', start: '2026-06-13', end: '2026-06-16', progress: 0, dependencies: 'd4_3' },
+      { id: 's0_2', name: 'Оповещения в почту и мессенджер', start: '2026-06-17', end: '2026-06-18', progress: 0, dependencies: 's0_1' },
+      { id: 's0_3', name: 'Порядок реакции на инциденты', start: '2026-06-19', end: '2026-06-19', progress: 0, dependencies: 's0_2' },
+      { id: 's1', name: 'Регламент и проверка восстановления', start: '2026-06-20', end: '2026-06-26', progress: 0, dependencies: 's0' },
+      { id: 's1_1', name: 'Регламент эксплуатации и инцидентов', start: '2026-06-20', end: '2026-06-22', progress: 0, dependencies: 's0' },
+      { id: 's1_2', name: 'Политика резервного копирования и расписание', start: '2026-06-23', end: '2026-06-25', progress: 0, dependencies: 's1_1' },
+      { id: 's1_3', name: 'Контрольное восстановление', start: '2026-06-26', end: '2026-06-26', progress: 0, dependencies: 's1_2' },
+      { id: 'm5', name: 'Промышленный запуск', start: '2026-07-03', end: '2026-07-03', progress: 0, dependencies: 'm4' },
+      { id: 's2', name: 'Передача в сопровождение', start: '2026-07-04', end: '2026-07-07', progress: 0, dependencies: 'm5' }
+    ];
+
+    let tasks = [];
+    let gantt = null;
+    let currentViewMode = 'Week';
+    let panelCollapsed = false;
+    const collapsedParents = new Set();
+
+    function getChildTasks(parentId) {
+      const childPrefix = `${parentId}_`;
+      return tasks.filter((t) => t.id.startsWith(childPrefix));
+    }
+
+    function isTopLevelTask(task) {
+      return !task.id.includes('_');
+    }
+
+    function getParentTasksWithChildren() {
+      return tasks.filter((t) => isTopLevelTask(t) && getChildTasks(t.id).length > 0);
+    }
+
+    function getVisibleTasks() {
+      return tasks.filter((task) => {
+        if (isTopLevelTask(task)) return true;
+        const parentId = task.id.split('_')[0];
+        return !collapsedParents.has(parentId);
+      });
+    }
+
+    function refreshParentSelect() {
+      const select = document.getElementById('parentLevelSelect');
+      const current = select.value;
+      const parents = getParentTasksWithChildren();
+      const options = parents
+        .map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`)
+        .join('');
+      select.innerHTML = options;
+
+      if (parents.length === 0) {
+        select.innerHTML = '<option value="">Нет parent задач</option>';
+        return;
+      }
+
+      const exists = parents.some((p) => p.id === current);
+      select.value = exists ? current : parents[0].id;
+    }
+
+    function toUTCDate(dateStr) {
+      return new Date(`${dateStr}T00:00:00Z`);
+    }
+
+    function formatISODate(date) {
+      const y = date.getUTCFullYear();
+      const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const d = String(date.getUTCDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function addDays(dateStr, days) {
+      const date = toUTCDate(dateStr);
+      date.setUTCDate(date.getUTCDate() + days);
+      return formatISODate(date);
+    }
+
+    function daysDiff(fromDateStr, toDateStr) {
+      const msPerDay = 24 * 60 * 60 * 1000;
+      const from = toUTCDate(fromDateStr).getTime();
+      const to = toUTCDate(toDateStr).getTime();
+      return Math.round((to - from) / msPerDay);
+    }
+
+    function ruDate(isoDate) {
+      const date = toUTCDate(isoDate);
+      const d = String(date.getUTCDate()).padStart(2, '0');
+      const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const y = date.getUTCFullYear();
+      return `${d}.${m}.${y}`;
+    }
+
+    function buildTasksForStart(newStartDate) {
+      const shift = daysDiff(baselineProjectStart, newStartDate);
+      return baseTasks.map((task) => {
+        const meta = taskMeta[task.id] || {};
+        return {
+          ...task,
+          start: addDays(task.start, shift),
+          end: addDays(task.end, shift),
+          ...meta
+        };
+      });
+    }
+
+    function renderTimelineDates() {
+      const node = document.getElementById('timelineDates');
+      if (!tasks.length) {
+        node.innerHTML = '<span class="label">Даты таймлайна:</span>';
+        return;
+      }
+
+      const sorted = [...tasks].sort((a, b) => a.start.localeCompare(b.start));
+      const minDate = sorted[0].start;
+      const maxDate = sorted.reduce((max, t) => (t.end > max ? t.end : max), sorted[0].end);
+
+      const labels = [];
+      let cursor = minDate;
+      while (cursor <= maxDate) {
+        labels.push(cursor);
+        cursor = addDays(cursor, 7);
+      }
+      if (labels[labels.length - 1] !== maxDate) {
+        labels.push(maxDate);
+      }
+
+      const chips = labels.map((d) => `<span class="date-chip">${ruDate(d)}</span>`).join('');
+      node.innerHTML = `<span class="label">Конкретные даты таймлайна:</span>${chips}`;
+    }
+
+    function buildGantt() {
+      const container = document.getElementById('gantt');
+      container.innerHTML = '';
+      refreshParentSelect();
+
+      gantt = new Gantt('#gantt', getVisibleTasks(), {
+        view_mode: currentViewMode,
+        language: 'ru',
+        bar_height: 24,
+        padding: 16,
+        popup_trigger: 'click'
+      });
+
+      bindHoverHandlers();
+      renderDetails(tasks.find((t) => t.major) || tasks[0]);
+      renderTimelineDates();
+      applyPanelState();
+    }
+
+    function applyPanelState() {
+      const layout = document.querySelector('.layout');
+      const panel = document.getElementById('detailsPanel');
+      const btn = document.getElementById('togglePanelBtn');
+      if (!layout || !panel || !btn) return;
+
+      if (panelCollapsed) {
+        layout.classList.add('panel-collapsed');
+        panel.classList.add('hidden');
+        btn.textContent = 'Раскрыть панель';
+      } else {
+        layout.classList.remove('panel-collapsed');
+        panel.classList.remove('hidden');
+        btn.textContent = 'Скрыть панель';
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function statusByProgress(progress) {
+      if (progress >= 100) return 'Завершено';
+      if (progress > 0) return 'В работе';
+      return 'Не начато';
+    }
+
+    function renderDetails(task) {
+      const panel = document.getElementById('detailsPanel');
+      const deps = task.dependencies ? task.dependencies : 'Нет';
+      const owner = task.owner || 'Не назначен';
+      const track = task.track || 'Общий';
+      const details = task.details || 'Описание не задано';
+      const status = statusByProgress(task.progress || 0);
+      const badge = task.major ? '<div class="badge">Крупный блок</div>' : '';
+      const children = getChildTasks(task.id);
+
+      let childBlock = '';
+      if (children.length > 0) {
+        const childItems = children
+          .map((child) => `<li>${escapeHtml(child.name)} (${child.progress || 0}%)</li>`)
+          .join('');
+        childBlock = `
+          <div class="subtasks">
+            <div class="subtasks-title">Состоит из:</div>
+            <ul class="subtasks-list">${childItems}</ul>
+          </div>
+        `;
+      }
+
+      panel.innerHTML = `
+        <h3>${escapeHtml(task.name)}</h3>
+        ${badge}
+        <div class="row"><strong>Трек:</strong> ${escapeHtml(track)}</div>
+        <div class="row"><strong>Владелец:</strong> ${escapeHtml(owner)}</div>
+        <div class="row"><strong>Статус:</strong> ${escapeHtml(status)} (${task.progress || 0}%)</div>
+        <div class="row"><strong>Сроки:</strong> ${escapeHtml(task.start)} - ${escapeHtml(task.end)}</div>
+        <div class="row"><strong>Зависит от:</strong> ${escapeHtml(deps)}</div>
+        <div class="desc">${escapeHtml(details)}</div>
+        ${childBlock}
+      `;
+    }
+
+    function bindHoverHandlers() {
+      const wrappers = document.querySelectorAll('#gantt .bar-wrapper');
+      wrappers.forEach((el) => {
+        const id = el.getAttribute('data-id');
+        if (!id) return;
+        el.onmouseenter = () => {
+          const task = tasks.find((t) => t.id === id);
+          if (task) renderDetails(task);
+        };
+      });
+    }
+
+    function applyProjectStart() {
+      const input = document.getElementById('projectStartInput');
+      const value = input.value;
+      if (!value) return;
+      const datePart = value.slice(0, 10);
+      tasks = buildTasksForStart(datePart);
+      buildGantt();
+    }
+
+    function resetProjectStart() {
+      const input = document.getElementById('projectStartInput');
+      input.value = `${baselineProjectStart}T09:00`;
+      tasks = buildTasksForStart(baselineProjectStart);
+      buildGantt();
+    }
+
+    tasks = buildTasksForStart(baselineProjectStart);
+    buildGantt();
+
+    function setView(mode) {
+      currentViewMode = mode;
+      gantt.change_view_mode(mode);
+      setTimeout(bindHoverHandlers, 0);
+    }
+
+    function collapseSelectedParent() {
+      const select = document.getElementById('parentLevelSelect');
+      if (!select || !select.value) return;
+      collapsedParents.add(select.value);
+      buildGantt();
+    }
+
+    function expandSelectedParent() {
+      const select = document.getElementById('parentLevelSelect');
+      if (!select || !select.value) return;
+      collapsedParents.delete(select.value);
+      buildGantt();
+    }
+
+    function collapseAllChildren() {
+      getParentTasksWithChildren().forEach((parent) => collapsedParents.add(parent.id));
+      buildGantt();
+    }
+
+    function expandAllChildren() {
+      collapsedParents.clear();
+      buildGantt();
+    }
+
+    function resetToday() {
+      const container = document.querySelector('#gantt');
+      container.scrollLeft = 0;
+    }
+
+    function toggleDetailsPanel() {
+      panelCollapsed = !panelCollapsed;
+      applyPanelState();
+    }
+  </script>
+</body>
+</html>
