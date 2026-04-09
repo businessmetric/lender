@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Коммерческое предложение | DWH + BI Platform</title>
-  <meta name="description" content="Коммерческая страница проекта DWH + BI: стоимость, этапы, команда и контакты для запуска проекта." />
+  <title>Коммерческое предложение | DWH + BI для Lender Invest</title>
+  <meta name="description" content="Коммерческое предложение по внедрению DWH + BI для инвестиционной платформы Lender Invest. Стоимость 650 000 руб., срок 2,5 месяца." />
   <style>
     :root {
       --bg: #f4f6fb;
@@ -23,6 +23,17 @@
       --radius-md: 14px;
       --max: 1180px;
     }
+    .metrics-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .metrics-table th {
+      text-align: left; padding: 10px 14px; background: var(--accent-soft);
+      color: var(--accent-dark); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .metrics-table td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.5; }
+    .metrics-table tr:last-child td { border-bottom: none; }
+    .metrics-table tr:hover td { background: rgba(115,103,240,0.04); }
+    .metrics-table td:first-child { font-weight: 700; white-space: nowrap; width: 22%; }
+    .metrics-table td:nth-child(2) { color: var(--muted); width: 28%; }
+    .metrics-table td:nth-child(3) { color: var(--accent-dark); font-size: 13px; }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -375,170 +386,353 @@
   </header>
 
   <main class="shell">
+    <!-- HERO -->
     <section class="hero">
       <div class="hero-grid">
         <article class="hero-card">
-          <span class="eyebrow">Коммерческая страница проекта</span>
-          <h1>Стоимость, этапы, команда и контакты</h1>
+          <span class="eyebrow">Коммерческое предложение · Lender Invest</span>
+          <h1>DWH + BI для инвест&shy;платформы</h1>
           <p>
-            Эта страница собирает коммерческую упаковку проекта в один контур: ориентир по стоимости,
-            формат поставки, состав команды и контактный блок для запуска пресейла или рабочего обсуждения.
+            Аналитический контур, который даёт продукту и маркетингу единый источник правды:
+            откуда приходят инвесторы, где теряются и почему возвращаются.
           </p>
           <div class="actions">
-            <a class="button primary" href="gantt_quick.html">Открыть дорожную карту</a>
-            <a class="button secondary" href="project.html">Посмотреть описание проекта</a>
+            <a class="button primary" href="#price">Условия и стоимость</a>
+            <a class="button secondary" href="gantt_quick.html">Дорожная карта</a>
           </div>
         </article>
         <aside class="hero-points">
           <div class="point">
-            <strong>Формат</strong>
-            <p>Проектная поставка с параллельными потоками аналитики, data engineering, BI и эксплуатационного запуска.</p>
+            <strong>Заказчик</strong>
+            <p>Lender Invest — инвестиционная платформа, lender-invest.ru. Привлечение розничных инвесторов в проекты МСП.</p>
           </div>
           <div class="point">
-            <strong>Срок</strong>
-            <p>Базовый план: 10 недель с контрольными вехами, приемкой и переходом в промышленный режим.</p>
+            <strong>Задача</strong>
+            <p>Инструмент принятия решений по продукту и маркетингу: повышать конверсию, растить Retention, увеличивать LTV.</p>
           </div>
           <div class="point">
-            <strong>Выход</strong>
-            <p>Рабочий DWH + BI контур, дашборды, регламенты, мониторинг и набор артефактов для сопровождения.</p>
+            <strong>Поставка</strong>
+            <p>Готовый DWH + BI-контур через 10 недель. Все источники подключены, метрики согласованы, дашборды приняты.</p>
           </div>
         </aside>
       </div>
     </section>
 
-    <section id="price">
+    <!-- ЛЕГЕНДА -->
+    <section id="context">
       <div class="section-head">
-        <h2>Стоимость</h2>
-        <p>Ниже ориентировочная коммерческая рамка. Это не юридическая оферта, а страница-представление для обсуждения состава и масштаба проекта.</p>
+        <h2>Контекст и проблема</h2>
       </div>
-      <div class="price-grid">
-        <article class="card price">
-          <div class="badge">Базовый контур</div>
-          <h3>Audit + Blueprint</h3>
-          <div class="price-value">от 700 тыс.</div>
-          <small>Подходит, если сначала нужно формализовать архитектуру, метрики и план внедрения.</small>
-          <ul>
-            <li>Обследование текущего контура</li>
-            <li>Словарь метрик и event map</li>
-            <li>Архитектурная схема и roadmap</li>
+      <div class="hero-grid" style="align-items:start; gap:16px;">
+        <article class="card" style="padding:28px 32px;">
+          <h3 style="font-size:20px; margin-bottom:14px;">Сейчас</h3>
+          <p style="color:var(--muted); line-height:1.65; margin-bottom:14px;">
+            Аналитические данные разрознены по источникам: Яндекс.Метрика, AppMetrica, Яндекс.Директ и продуктовая БД
+            живут отдельно. Текущий контур построен маркетинговым подрядчиком (ePromo) под свои задачи ―
+            на инфраструктуре beget, Python-скриптах и cron-джобах.
+          </p>
+          <ul style="color:var(--muted); padding-left:18px; line-height:1.7; margin:0;">
+            <li>Нет единой воронки от трафика до повторной инвестиции</li>
+            <li>Нет когортного анализа и расчёта LTV</li>
+            <li>Нет контроля качества данных и SLA обновлений</li>
+            <li>Логика расчётов закрыта на стороне подрядчика</li>
           </ul>
         </article>
-        <article class="card price recommended">
-          <div class="badge">Рекомендуемый пакет</div>
-          <h3>DWH + BI Launch</h3>
-          <div class="price-value">от 2,4 млн</div>
-          <small>Полная поставка хранилища, витрин, BI-слоя, мониторинга и запуска в сопровождение.</small>
-          <ul>
-            <li>Инфраструктура, ClickHouse, Airflow, dbt</li>
-            <li>Подключение источников и витрины</li>
-            <li>BI-дашборды, UAT и передача в эксплуатацию</li>
-          </ul>
-        </article>
-        <article class="card price">
-          <div class="badge">Расширенный контур</div>
-          <h3>Growth Platform</h3>
-          <div class="price-value">по оценке</div>
-          <small>Подходит, если сразу закладывается следующий этап: новые источники, расширение BI и SLA-поддержка.</small>
-          <ul>
-            <li>Дополнительные интеграции и модели</li>
-            <li>Расширенный пакет контроля качества</li>
-            <li>Развитие продукта и регулярный change backlog</li>
+        <article class="card" style="padding:28px 32px; border-color:rgba(115,103,240,0.22); background:linear-gradient(180deg,rgba(255,255,255,0.97),rgba(239,242,247,0.97));">
+          <h3 style="font-size:20px; margin-bottom:14px;">После проекта</h3>
+          <p style="color:var(--muted); line-height:1.65; margin-bottom:14px;">
+            Собственный DWH-контур на ClickHouse + Airflow, независимый от любого подрядчика.
+            Все источники подключены через согласованные интеграции, данные трансформируются по прозрачным правилам.
+          </p>
+          <ul style="padding-left:18px; line-height:1.7; margin:0;">
+            <li>Сквозная воронка: трафик → регистрация → идентификация → инвестиция → повтор</li>
+            <li>Когорты, Retention и LTV в одном интерфейсе</li>
+            <li>Единый глоссарий метрик, согласованный с бизнесом</li>
+            <li>Мониторинг, бэкапы, документация и регламент поддержки</li>
           </ul>
         </article>
       </div>
-      <p class="stage-note">Числа можно заменить на точные после согласования объема, состава команды и границ первой версии проекта.</p>
     </section>
 
+    <!-- ВЫГОДЫ ПО РОЛЯМ -->
+    <section id="benefits">
+      <div class="section-head">
+        <h2>Что получает каждая роль</h2>
+        <p>Один проект — три точки ценности внутри компании.</p>
+      </div>
+      <div class="stage-grid">
+        <article class="card">
+          <div class="team-role">CEO</div>
+          <h3>Собственник / CEO</h3>
+          <ul style="padding-left:18px; line-height:1.7; margin:10px 0 0; color:var(--muted);">
+            <li>Независимость от подрядчиков в аналитике</li>
+            <li>Единый источник правды для операционных решений</li>
+            <li>Прозрачность: как растут LTV и объём портфеля</li>
+            <li>Актив внутри компании, не аутсорс-зависимость</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="team-role">CMO</div>
+          <h3>Директор по маркетингу</h3>
+          <ul style="padding-left:18px; line-height:1.7; margin:10px 0 0; color:var(--muted);">
+            <li>Сквозная аналитика от клика до инвестиции по каналам</li>
+            <li>Точная стоимость привлечения (CAC) в разрезе UTM</li>
+            <li>Воронка с потерями на каждом шаге — понятно где чинить</li>
+            <li>Данные для A/B-тестов и оптимизации посадочных</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="team-role" style="min-width:auto; padding:0 14px;">CPO</div>
+          <h3>Директор по продукту</h3>
+          <ul style="padding-left:18px; line-height:1.7; margin:10px 0 0; color:var(--muted);">
+            <li>Retention-кривые по когортам регистрации и первой инвестиции</li>
+            <li>Поведенческие паттерны: где и почему уходят пользователи</li>
+            <li>Событийная модель для оценки изменений в продукте</li>
+            <li>LTV-сегментация для приоритизации фич</li>
+          </ul>
+        </article>
+        <article class="card">
+          <div class="team-role">CTO</div>
+          <h3>Технический директор</h3>
+          <ul style="padding-left:18px; line-height:1.7; margin:10px 0 0; color:var(--muted);">
+            <li>Прозрачная архитектура: ClickHouse, Airflow, dbt — всё под вашим контролем</li>
+            <li>Данные и логика трансформаций у вас, не у подрядчика</li>
+            <li>Мониторинг, алерты, политика бэкапов</li>
+            <li>Документация и регламент для внутренней поддержки</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- МЕТРИКИ -->
+    <section id="metrics">
+      <div class="section-head">
+        <h2>Метрики, которые будут работать</h2>
+        <p>Ниже — целевой набор под задачи инвестиционной платформы. Финальный словарь согласуется в ходе Discovery.</p>
+      </div>
+      <article class="card" style="padding:0; overflow:hidden;">
+        <table class="metrics-table">
+          <thead>
+            <tr>
+              <th>Метрика</th>
+              <th>Что измеряет</th>
+              <th>Зачем нужна</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Воронка конверсии</td>
+              <td>Трафик → регистрация → идентификация → первая инвестиция</td>
+              <td>Видеть потери на каждом шаге и приоритизировать улучшения</td>
+            </tr>
+            <tr>
+              <td>CAC по каналам</td>
+              <td>Стоимость привлечения инвестора в разрезе UTM / источника</td>
+              <td>Перераспределять бюджет в прибыльные каналы</td>
+            </tr>
+            <tr>
+              <td>Retention D7 / D30 / D90</td>
+              <td>Доля инвесторов, вернувшихся к повторной инвестиции</td>
+              <td>Оценивать удержание и влияние продуктовых изменений</td>
+            </tr>
+            <tr>
+              <td>LTV</td>
+              <td>Пожизненная ценность клиента (суммарный доход / когорта)</td>
+              <td>Принимать решения по unit-экономике и допустимому CAC</td>
+            </tr>
+            <tr>
+              <td>Time-to-invest</td>
+              <td>Время от регистрации до первой инвестиции</td>
+              <td>Находить точки ускорения онбординга</td>
+            </tr>
+            <tr>
+              <td>Идентификация: pass rate</td>
+              <td>Доля успешных идентификаций (подача → результат)</td>
+              <td>Диагностировать проблемы в процессе KYC</td>
+            </tr>
+            <tr>
+              <td>Avg deal size</td>
+              <td>Средний размер инвестиции по сегментам</td>
+              <td>Сегментировать аудиторию для персонализированных предложений</td>
+            </tr>
+            <tr>
+              <td>Повторные инвестиции</td>
+              <td>Частота и объём reinvestment по когортам</td>
+              <td>Понимать реальный жизненный цикл клиента</td>
+            </tr>
+            <tr>
+              <td>Качество данных</td>
+              <td>Полнота, задержки загрузки, аномалии по источникам</td>
+              <td>Обеспечивать достоверность всех расчётов</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <!-- ЦЕНА -->
+    <section id="price">
+      <div class="section-head">
+        <h2>Стоимость и условия</h2>
+        <p>Одна фиксированная цена за полный проект. Без тарифных сеток и открытых смет.</p>
+      </div>
+      <div class="hero-grid" style="align-items:start; gap:16px;">
+        <article class="card price recommended" style="padding:36px 40px;">
+          <div class="badge">Фиксированная цена · полный проект</div>
+          <div class="price-value">650 000 ₽</div>
+          <p style="color:var(--muted); margin:10px 0 24px; font-size:16px; line-height:1.6;">
+            Весь проект под ключ: три параллельных стрима, 10 недель, все результаты включены.
+          </p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px;">
+            <div style="padding:16px; border-radius:14px; background:rgba(255,255,255,0.8); border:1px solid var(--line);">
+              <div style="font-size:13px; color:var(--muted); margin-bottom:4px;">Первый платёж</div>
+              <div style="font-size:24px; font-weight:800; letter-spacing:-0.03em;">325 000 ₽</div>
+              <div style="font-size:12px; color:var(--muted); margin-top:4px;">При старте проекта (50%)</div>
+            </div>
+            <div style="padding:16px; border-radius:14px; background:rgba(255,255,255,0.8); border:1px solid var(--line);">
+              <div style="font-size:13px; color:var(--muted); margin-bottom:4px;">Второй платёж</div>
+              <div style="font-size:24px; font-weight:800; letter-spacing:-0.03em;">325 000 ₽</div>
+              <div style="font-size:12px; color:var(--muted); margin-top:4px;">По итогам UAT (50%)</div>
+            </div>
+          </div>
+          <ul style="padding-left:18px; line-height:1.75; margin:0; font-size:15px;">
+            <li>Полный DWH-контур: ClickHouse, Airflow, dbt</li>
+            <li>Подключение всех согласованных источников</li>
+            <li>Витрины: воронка, когорты, retention, LTV, финансы</li>
+            <li>BI-дашборды — приёмка с бизнесом</li>
+            <li>Мониторинг, бэкапы, документация, регламент</li>
+            <li>10 недель, 3 параллельных стрима</li>
+          </ul>
+        </article>
+        <aside style="display:grid; gap:12px;">
+          <div class="card" style="padding:22px 26px;">
+            <h3 style="font-size:16px; margin-bottom:10px;">Что фиксируется на старте</h3>
+            <ul style="padding-left:18px; line-height:1.75; color:var(--muted); margin:0; font-size:14px;">
+              <li>Состав источников данных и доступы</li>
+              <li>Перечень метрик и дашбордов первой версии</li>
+              <li>Критерии приёмки по каждому этапу</li>
+              <li>Контрольные точки и дата финального запуска</li>
+            </ul>
+          </div>
+          <div class="card" style="padding:22px 26px;">
+            <h3 style="font-size:16px; margin-bottom:10px;">Что в стоимость не входит</h3>
+            <ul style="padding-left:18px; line-height:1.75; color:var(--muted); margin:0; font-size:14px;">
+              <li>Серверная инфраструктура и лицензии BI-инструментов</li>
+              <li>Доработки трекинга на стороне продукта (веб/мобайл)</li>
+              <li>Работы по scope, согласованному после фиксации требований</li>
+            </ul>
+          </div>
+          <div class="accent-card" style="padding:22px 26px;">
+            <h3 style="font-size:16px; margin-bottom:10px;">Срок</h3>
+            <p style="color:var(--muted); font-size:14px; line-height:1.65; margin:0;">
+              10 недель (2,5 месяца) с момента старта и получения доступов к источникам.
+              Контрольные точки: Discovery → Architecture → Build → Launch + UAT.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ЭТАПЫ -->
     <section id="stages">
       <div class="section-head">
         <h2>Этапы</h2>
-        <p>Коммерческая страница коротко повторяет рабочую структуру поставки, чтобы заказчик видел не только цену, но и последовательность результата.</p>
+        <p>Три параллельных стрима управляются единым трекером. Ниже — ключевые этапы с выходами.</p>
       </div>
       <div class="stage-grid">
         <article class="card">
           <div class="stage-number">1</div>
           <h3>Discovery</h3>
-          <p>Доступы, интервью, фиксация проблем, CJM, карта событий и KPI.</p>
+          <p style="color:var(--muted); line-height:1.6; margin-top:8px; font-size:14px;">Доступы, интервью с бизнесом, инвентаризация источников, CJM, словарь метрик, карта событий.</p>
+          <div style="margin-top:12px; font-size:13px; color:var(--accent-dark); font-weight:600;">Неделя 1–2 · Выход: ТЗ, event map</div>
         </article>
         <article class="card">
           <div class="stage-number">2</div>
           <h3>Architecture</h3>
-          <p>Целевая схема хранилища, инфраструктура, SLA, безопасность и контрольный лист поставки.</p>
+          <p style="color:var(--muted); line-height:1.6; margin-top:8px; font-size:14px;">Целевая схема хранилища, инфраструктура (ClickHouse + Airflow), SLA, безопасность, контрольный лист поставки.</p>
+          <div style="margin-top:12px; font-size:13px; color:var(--accent-dark); font-weight:600;">Неделя 2–4 · Выход: готовая среда</div>
         </article>
         <article class="card">
           <div class="stage-number">3</div>
           <h3>Build</h3>
-          <p>Загрузки, слои данных, витрины, BI, проверки качества и сверка показателей.</p>
+          <p style="color:var(--muted); line-height:1.6; margin-top:8px; font-size:14px;">Подключение источников, слои данных (raw → staging → mart), витрины, BI-дашборды, контроль качества.</p>
+          <div style="margin-top:12px; font-size:13px; color:var(--accent-dark); font-weight:600;">Неделя 4–9 · Выход: рабочие витрины</div>
         </article>
         <article class="card">
           <div class="stage-number">4</div>
           <h3>Launch</h3>
-          <p>Мониторинг, резервирование, UAT, документация и передача в сопровождение.</p>
+          <p style="color:var(--muted); line-height:1.6; margin-top:8px; font-size:14px;">Мониторинг, резервирование, UAT с бизнесом, устранение замечаний, документация и передача в эксплуатацию.</p>
+          <div style="margin-top:12px; font-size:13px; color:var(--accent-dark); font-weight:600;">Неделя 10 · Выход: промышленный запуск</div>
         </article>
       </div>
     </section>
 
+    <!-- КОМАНДА -->
     <section id="team">
       <div class="section-head">
         <h2>Команда</h2>
-        <p>Состав можно адаптировать под бюджет и глубину первой версии, но базово проект требует кросс-функциональной команды.</p>
+        <p>Кросс-функциональная команда business-metric.ru ведёт проект от discovery до передачи в поддержку.</p>
       </div>
       <div class="team-grid">
         <article class="card">
           <div class="team-role">PM</div>
           <h3>Project Manager</h3>
-          <p>План, статусы, риски, координация потоков и коммуникация с заказчиком.</p>
+          <p style="color:var(--muted); line-height:1.6; margin-top:8px; font-size:14px;">План, статусы, риски, координация потоков, коммуникация с заказчиком и контроль критического пути.</p>
         </article>
         <article class="card">
           <div class="team-role">BA</div>
           <h3>Business Analyst</h3>
-          <p>Требования, метрики, CJM, event map, приемка бизнес-логики и сценариев.</p>
+          <p style="color:var(--muted); line-height:1.6; margin-top:8px; font-size:14px;">Требования, метрики, CJM, event map, словарь данных и приёмка бизнес-логики в дашбордах.</p>
         </article>
         <article class="card">
           <div class="team-role">DE</div>
           <h3>Data Engineer</h3>
-          <p>Интеграции источников, DWH-слои, dbt, качество данных и эксплуатационная логика.</p>
+          <p style="color:var(--muted); line-height:1.6; margin-top:8px; font-size:14px;">Интеграции источников, DWH-слои, dbt-модели, качество данных и эксплуатационная надёжность.</p>
         </article>
         <article class="card">
           <div class="team-role">BI</div>
           <h3>BI Analyst</h3>
-          <p>Дашборды, KPI, визуализация, внутреннее ревью и поддержка UAT.</p>
+          <p style="color:var(--muted); line-height:1.6; margin-top:8px; font-size:14px;">Дашборды, KPI-расчёты, визуализация воронки и когорт, поддержка UAT и финальной приёмки.</p>
         </article>
       </div>
     </section>
 
+    <!-- КОНТАКТЫ -->
     <section id="contacts">
       <div class="section-head">
         <h2>Контакты</h2>
-        <p>Поставил шаблонный блок, который можно быстро заменить на реальные контакты компании или конкретного аккаунт-менеджера.</p>
+        <p>Для старта хватит одного созвона на 45 минут — проверить доступы, зафиксировать состав и подписать договор.</p>
       </div>
       <div class="contact-grid">
         <article class="accent-card">
-          <h3>Запуск обсуждения</h3>
-          <p>
-            Для коммерческого обсуждения обычно достаточно одного созвона на 45–60 минут: уточнить контур,
-            проверить источники, определить приоритеты первой версии и зафиксировать рамку оценки.
+          <h3 style="font-size:22px; margin-bottom:14px;">business-metric.ru</h3>
+          <p style="color:var(--muted); line-height:1.65; margin-bottom:16px;">
+            Проектная команда по аналитике данных и BI. Специализация — DWH-платформы и аналитика для финтех и инвест-продуктов.
           </p>
-          <ul>
-            <li>Подтвердить состав источников и доступов</li>
-            <li>Согласовать результат первой версии</li>
-            <li>Определить желаемый формат поддержки после запуска</li>
+          <ul style="padding-left:18px; line-height:1.8; margin:0;">
+            <li>Фиксированные результаты на каждом этапе</li>
+            <li>Прозрачное ценообразование, без скрытых работ</li>
+            <li>Код и данные остаются у вас</li>
           </ul>
+          <div class="actions" style="margin-top:22px;">
+            <a class="button primary" href="mailto:ag@business-metric.ru">Написать письмо</a>
+            <a class="button secondary" href="https://business-metric.ru/" target="_blank" rel="noopener">Сайт компании</a>
+          </div>
         </article>
         <article class="contact-card">
           <div class="contact-item">
             <strong>Почта</strong>
-            <div>sales@company.ru</div>
+            <div><a href="mailto:ag@business-metric.ru" style="color:var(--accent-dark); text-decoration:none;">ag@business-metric.ru</a></div>
           </div>
           <div class="contact-item">
-            <strong>Telegram</strong>
-            <div>@company_sales</div>
+            <strong>Телефон / WhatsApp</strong>
+            <div><a href="tel:+79175302589" style="color:var(--accent-dark); text-decoration:none;">+7 917 530-25-89</a></div>
           </div>
           <div class="contact-item">
-            <strong>Календарь встречи</strong>
-            <div>Ссылка на бронирование слота</div>
+            <strong>Сайт</strong>
+            <div><a href="https://business-metric.ru/" target="_blank" rel="noopener" style="color:var(--accent-dark); text-decoration:none;">business-metric.ru</a></div>
           </div>
-          <div class="contact-note">Это шаблонные значения. Их лучше заменить перед публикацией на реальные контактные данные.</div>
+          <div class="contact-note">Ответим в течение рабочего дня. Для быстрого старта — звоните напрямую.</div>
         </article>
       </div>
     </section>
@@ -546,19 +740,19 @@
     <section>
       <div class="cta">
         <div>
-          <h3>Коммерческая упаковка готова</h3>
-          <p>Теперь сайт состоит из главной, описания проекта, дорожной карты и коммерческой страницы. Этого уже достаточно для GitHub Pages-публикации и отправки ссылки заказчику.</p>
+          <h3>Готовы обсудить детали</h3>
+          <p>650 000 ₽ · 10 недель · из разрозненных данных — к единому источнику правды для продукта и маркетинга.</p>
         </div>
         <div class="actions">
-          <a class="button primary" href="index.html">На главную</a>
-          <a class="button secondary" href="gantt_quick.html">К диаграмме</a>
+          <a class="button primary" href="mailto:ag@business-metric.ru">Начать обсуждение</a>
+          <a class="button secondary" href="project.html">Техническое описание</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="shell">
-    Коммерческая страница проекта для GitHub Pages-публикации.
+    Business Metric · <a href="https://business-metric.ru/" style="color:inherit;" target="_blank" rel="noopener">business-metric.ru</a> · ag@business-metric.ru · +7 917 530-25-89
   </footer>
 </body>
 </html>
