@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Описание проекта | DWH + BI Platform</title>
+  <meta name="description" content="Описание проекта внедрения DWH + BI: текущее состояние, целевая модель, потоки работ, метрики и путь клиента." />
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: rgba(255, 255, 255, 0.88);
+      --surface-strong: #ffffff;
+      --text: #1c202a;
+      --muted: #808190;
+      --line: rgba(28, 32, 42, 0.1);
+      --accent: #7367f0;
+      --accent-dark: #6860cc;
+      --accent-soft: rgba(115, 103, 240, 0.14);
+      --sage: #eff2f7;
+      --shadow: 0 22px 54px rgba(32, 41, 69, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(115, 103, 240, 0.12), transparent 28%),
+        radial-gradient(circle at 90% 20%, rgba(206, 159, 252, 0.16), transparent 22%),
+        linear-gradient(180deg, #fbfcff 0%, var(--bg) 56%, #f3f6fb 100%);
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(251, 252, 255, 0.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav a:hover,
+    .nav a.active { color: var(--text); }
+
+    .hero {
+      padding: 52px 0 24px;
+    }
+
+    .hero-card,
+    .section-card,
+    .grid-card,
+    .cta {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-card {
+      border-radius: var(--radius-xl);
+      padding: 34px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 22px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      margin-top: 18px;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      max-width: 12ch;
+    }
+
+    .hero-card p {
+      margin-top: 18px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 18px;
+      max-width: 60ch;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .mini-panel {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid var(--line);
+    }
+
+    .mini-panel strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    .mini-panel span {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .button.primary {
+      background: linear-gradient(135deg, #7367f0 0%, #ce9ffc 100%);
+      color: #ffffff;
+      box-shadow: 0 16px 30px rgba(115, 103, 240, 0.22);
+    }
+    .button.secondary { background: transparent; border-color: var(--line); }
+
+    main { padding-bottom: 44px; }
+    section { padding: 14px 0; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(28px, 3vw, 40px);
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 62ch;
+    }
+
+    .two-col,
+    .three-col,
+    .four-col {
+      display: grid;
+      gap: 16px;
+    }
+
+    .two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four-col { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .section-card,
+    .grid-card,
+    .cta {
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+
+    .section-card p,
+    .grid-card p,
+    .cta p {
+      color: var(--muted);
+      line-height: 1.62;
+      margin-top: 10px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      padding: 9px 13px;
+      border-radius: 999px;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .grid-card h3,
+    .section-card h3,
+    .cta h3 { font-size: 22px; }
+
+    .grid-card ul,
+    .section-card ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      line-height: 1.58;
+    }
+
+    .accent-band {
+      padding: 20px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(115, 103, 240, 0.08), rgba(206, 159, 252, 0.16));
+      border: 1px solid var(--line);
+    }
+
+    .step-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .step {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .cta {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    footer {
+      padding: 10px 0 38px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-card,
+      .two-col,
+      .three-col,
+      .four-col,
+      .cta {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .topbar-inner {
+        flex-direction: column;
+        align-items: start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell { width: min(calc(100% - 20px), var(--max)); }
+      .hero-card,
+      .section-card,
+      .grid-card,
+      .cta { padding: 20px; }
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">DWH + BI Platform</div>
+      <nav class="nav" aria-label="Основная навигация">
+        <a href="index.html">Главная</a>
+        <a class="active" href="project.html">Описание</a>
+        <a href="offer.html">Коммерческая</a>
+        <a href="gantt_quick.html">Диаграмма</a>
+        <a href="gantt_tasks.csv">CSV</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-card">
+        <div>
+          <span class="eyebrow">Подробное описание проекта</span>
+          <h1>Корпоративный DWH + BI контур для бизнеса</h1>
+          <p>
+            Проект переводит аналитику из подрядного и частично ручного режима в управляемую платформу с
+            прозрачной архитектурой, качеством данных, регламентированной эксплуатацией и единым источником правды.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="gantt_quick.html">Смотреть дорожную карту</a>
+            <a class="button secondary" href="offer.html">Открыть коммерческую страницу</a>
+          </div>
+        </div>
+        <aside class="hero-side">
+          <div class="mini-panel">
+            <strong>AS-IS</strong>
+            <span>Python-скрипты и cron, отдельная аналитическая база, ограниченная наблюдаемость и слабая масштабируемость под новые сценарии.</span>
+          </div>
+          <div class="mini-panel">
+            <strong>TO-BE</strong>
+            <span>DWH, витрины, BI, качество данных, SLA, мониторинг, резервирование и формальная модель сопровождения.</span>
+          </div>
+          <div class="mini-panel">
+            <strong>Источники</strong>
+            <span>Яндекс.Метрика, AppMetrica, Яндекс.Директ и продуктовая транзакционная база данных.</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Контекст и задача</h2>
+        <p>Существующий аналитический контур уже собирает данные, но не является полноценной корпоративной платформой для продуктовой, маркетинговой и управленческой аналитики.</p>
+      </div>
+      <div class="two-col">
+        <article class="section-card">
+          <h3>Почему текущего решения недостаточно</h3>
+          <ul>
+            <li>Контур ориентирован на подрядную отчетность, а не на внутренний DWH-стандарт.</li>
+            <li>Ограничены SLA, наблюдаемость, управление качеством и формальные правила эксплуатации.</li>
+            <li>Логика трансформаций и модель данных тяжело масштабируются на новые продуктовые сценарии.</li>
+          </ul>
+        </article>
+        <article class="section-card">
+          <h3>Цель проекта</h3>
+          <ul>
+            <li>Объединить данные из ключевых источников в едином контуре.</li>
+            <li>Обеспечить прозрачную и проверяемую логику расчета бизнес-метрик.</li>
+            <li>Дать бизнесу оперативные дашборды и единый источник правды.</li>
+            <li>Снизить ручной труд и риски ошибок в отчетности.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Потоки реализации</h2>
+        <p>Проект разделен на параллельные стримы, чтобы аналитика, инженерия и ввод в эксплуатацию двигались синхронно.</p>
+      </div>
+      <div class="three-col">
+        <article class="grid-card">
+          <h3>Стрим 1. Аналитика</h3>
+          <p>Обследование, карта пути клиента, словарь метрик, карта событий и постановка задач на доработки источников.</p>
+          <ul>
+            <li>Доступы, интервью и фиксация проблем текущей отчетности</li>
+            <li>Согласование KPI, CJM и event map</li>
+            <li>Подготовка ТЗ по трекингу и приемке данных</li>
+          </ul>
+        </article>
+        <article class="grid-card">
+          <h3>Стрим 2. Платформа</h3>
+          <p>Архитектура, инфраструктура, DWH-компоненты, подключение источников, трансформации и витрины данных.</p>
+          <ul>
+            <li>Безопасность сервера, Docker Compose, секреты</li>
+            <li>ClickHouse, Airflow, сырые и промежуточные слои</li>
+            <li>dbt, витрины, тесты качества и сверка показателей</li>
+          </ul>
+        </article>
+        <article class="grid-card">
+          <h3>Стрим 3. Запуск</h3>
+          <p>Мониторинг, резервное копирование, интеграционные проверки, приемка и передача в сопровождение.</p>
+          <ul>
+            <li>Оповещения, контроль задержек и регламент реакции</li>
+            <li>Backup policy и тест восстановления</li>
+            <li>UAT, документация и переход в промышленный режим</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="accent-band">
+        <div class="section-head">
+          <h2>Контур метрик</h2>
+          <p>Бизнес-логика фиксируется заранее, чтобы витрины и дашборды строились на согласованной модели данных, а не на разрозненных интерпретациях.</p>
+        </div>
+        <div class="four-col">
+          <article class="grid-card">
+            <h3>Пользовательские</h3>
+            <p>User ID, источник привлечения, платформа, гео, сегмент новый или возвращающийся.</p>
+          </article>
+          <article class="grid-card">
+            <h3>Поведенческие</h3>
+            <p>Последовательность действий, время между шагами, глубина просмотра, клики и скроллы.</p>
+          </article>
+          <article class="grid-card">
+            <h3>Финансовые</h3>
+            <p>Пополнения, инвестиции, частота операций, доходность и комиссионный доход.</p>
+          </article>
+          <article class="grid-card">
+            <h3>Когортные</h3>
+            <p>Retention, повторные инвестиции, LTV и потери пользователей на ключевых этапах.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Путь клиента и события</h2>
+        <p>Ниже зафиксированы целевые этапы CJM и базовая событийная модель, от которых отталкиваются требования к данным и визуализациям.</p>
+      </div>
+      <div class="two-col">
+        <article class="section-card">
+          <h3>CJM: ключевые этапы</h3>
+          <div class="step-list">
+            <div class="step">1. Трафик и посадочная страница</div>
+            <div class="step">2. Переход по целевому CTA</div>
+            <div class="step">3. Регистрация и подтверждение</div>
+            <div class="step">4. Идентификация и результат проверки</div>
+            <div class="step">5. Выбор продукта, пополнение и первая инвестиция</div>
+            <div class="step">6. Повторные инвестиции и удержание клиента</div>
+          </div>
+        </article>
+        <article class="section-card">
+          <h3>Событийная модель</h3>
+          <div class="pill-row">
+            <span class="pill">page_view</span>
+            <span class="pill">click_cta</span>
+            <span class="pill">signup_start</span>
+            <span class="pill">signup_complete</span>
+            <span class="pill">ident_start</span>
+            <span class="pill">ident_success</span>
+            <span class="pill">deposit_success</span>
+            <span class="pill">invest_start</span>
+            <span class="pill">invest_success</span>
+            <span class="pill">session_duration</span>
+          </div>
+          <p>Эти события образуют основу для воронки, когортных расчетов и контроля качества пользовательского пути.</p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="cta">
+        <div>
+          <h3>Следующий рабочий слой сайта</h3>
+          <p>Сейчас сайт уже годится для публикации. Дальше можно добавить логотип, фирменные цвета заказчика, favicon и отдельные блоки под коммерческое предложение или презентацию для стейкхолдеров.</p>
+        </div>
+        <div class="actions">
+          <a class="button primary" href="offer.html">Открыть коммерческую страницу</a>
+          <a class="button secondary" href="gantt_tasks.csv">Скачать CSV</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">
+    Страница описания проекта для GitHub Pages-публикации.
+  </footer>
+</body>
+</html>

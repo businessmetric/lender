@@ -6,7 +6,47 @@
   <title>Хранилище данных и отчетность: диаграмма проекта</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/frappe-gantt@0.6.1/dist/frappe-gantt.css" />
   <style>
-    body { font-family: Segoe UI, Arial, sans-serif; margin: 16px; background: #f6f8fb; color: #1f2937; }
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 16px; background: linear-gradient(180deg, #fbfcff 0%, #f4f6fb 100%); color: #1c202a; }
+    .site-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(28, 32, 42, 0.1);
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .site-nav .brand {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #1c202a;
+    }
+    .site-nav .links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .site-nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 12px;
+      border: 1px solid rgba(28, 32, 42, 0.1);
+      border-radius: 999px;
+      background: #fff;
+      color: #1c202a;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .site-nav a:hover { background: rgba(115, 103, 240, 0.08); }
     h1 { margin: 0 0 8px; font-size: 22px; }
     .hint { margin: 0 0 12px; color: #4b5563; }
     .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; align-items: center; }
@@ -50,9 +90,9 @@
       min-width: 220px;
     }
     button {
-      border: 1px solid #cbd5e1; background: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer;
+      border: 1px solid rgba(28, 32, 42, 0.1); background: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer; color: #1c202a;
     }
-    button:hover { background: #eef2ff; }
+    button:hover { background: rgba(115, 103, 240, 0.08); }
     .toolbar-help {
       margin: 0 0 12px;
       padding: 8px 10px;
@@ -90,10 +130,10 @@
     }
     .layout { display: grid; grid-template-columns: 1fr 320px; gap: 12px; align-items: start; }
     .layout.panel-collapsed { grid-template-columns: 1fr; }
-    #gantt { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 8px; overflow: auto; }
+    #gantt { background: #fff; border: 1px solid rgba(28, 32, 42, 0.1); border-radius: 10px; padding: 8px; overflow: auto; }
     .panel {
       background: #fff;
-      border: 1px solid #e5e7eb;
+      border: 1px solid rgba(28, 32, 42, 0.1);
       border-radius: 10px;
       padding: 12px;
       position: sticky;
@@ -106,8 +146,8 @@
       font-size: 11px;
       padding: 2px 8px;
       border-radius: 999px;
-      background: #e0e7ff;
-      color: #3730a3;
+      background: rgba(115, 103, 240, 0.12);
+      color: #6860cc;
       margin-bottom: 8px;
     }
     .panel .row { margin: 4px 0; color: #374151; font-size: 13px; }
@@ -153,6 +193,15 @@
   </style>
 </head>
 <body>
+  <nav class="site-nav" aria-label="Навигация сайта">
+    <div class="brand">DWH + BI Platform</div>
+    <div class="links">
+      <a href="index.html">Главная</a>
+      <a href="project.html">Описание проекта</a>
+      <a href="offer.html">Коммерческая страница</a>
+      <a href="gantt_tasks.csv">CSV задач</a>
+    </div>
+  </nav>
   <h1>Внедрение хранилища данных и отчетности (10 недель)</h1>
   <p class="hint">Быстрый режим: наведи на задачу и смотри детали справа. Так работает плавнее и читается лучше.</p>
 

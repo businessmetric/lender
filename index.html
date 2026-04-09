@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DWH + BI Platform</title>
+  <meta name="description" content="Проект внедрения корпоративного хранилища данных и BI-отчетности с дорожной картой, этапами и целевой моделью." />
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: rgba(255, 255, 255, 0.88);
+      --surface-strong: #ffffff;
+      --text: #1c202a;
+      --muted: #808190;
+      --line: rgba(28, 32, 42, 0.1);
+      --accent: #7367f0;
+      --accent-dark: #6860cc;
+      --accent-soft: rgba(115, 103, 240, 0.14);
+      --olive: #eff2f7;
+      --shadow: 0 24px 60px rgba(32, 41, 69, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(115, 103, 240, 0.12), transparent 34%),
+        radial-gradient(circle at 80% 20%, rgba(206, 159, 252, 0.18), transparent 24%),
+        linear-gradient(180deg, #fbfcff 0%, var(--bg) 50%, #f3f6fb 100%);
+    }
+
+    a { color: inherit; }
+
+    .shell {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(251, 252, 255, 0.88);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav a:hover { color: var(--text); }
+
+    .hero {
+      padding: 54px 0 34px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-side,
+    .section-card,
+    .stream,
+    .metric-card,
+    .deliverable,
+    .timeline-card,
+    .cta {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-copy {
+      border-radius: var(--radius-xl);
+      padding: 36px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      margin-top: 18px;
+      font-size: clamp(38px, 6vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      max-width: 10ch;
+    }
+
+    .hero-text {
+      margin-top: 20px;
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid transparent;
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+    .button.primary {
+      background: linear-gradient(135deg, #7367f0 0%, #ce9ffc 100%);
+      color: #ffffff;
+      box-shadow: 0 16px 30px rgba(115, 103, 240, 0.22);
+    }
+    .button.secondary { background: transparent; border-color: var(--line); color: var(--text); }
+
+    .hero-stats {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--line);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .hero-side {
+      border-radius: var(--radius-xl);
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      justify-content: space-between;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(239, 242, 247, 0.96) 100%);
+    }
+
+    .mini-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--accent-dark);
+      text-transform: uppercase;
+    }
+
+    .hero-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(28, 32, 42, 0.08);
+    }
+
+    .hero-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .hero-item span {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    main {
+      padding-bottom: 48px;
+    }
+
+    section {
+      padding: 14px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(28px, 3vw, 42px);
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      max-width: 62ch;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .about-grid,
+    .deliverables-grid,
+    .metrics-grid,
+    .timeline-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .about-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+
+    .section-card {
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+
+    .section-card p {
+      color: var(--muted);
+      line-height: 1.65;
+      margin-top: 10px;
+    }
+
+    .pill-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--surface-strong);
+      border: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .stream-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stream {
+      border-radius: var(--radius-lg);
+      padding: 22px;
+    }
+
+    .stream-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .stream p {
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .stream ul,
+    .timeline-card ul,
+    .deliverable ul {
+      margin: 16px 0 0;
+      padding-left: 18px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .deliverables-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .deliverable {
+      border-radius: var(--radius-lg);
+      padding: 22px;
+    }
+
+    .metric-band {
+      margin-top: 12px;
+      padding: 20px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(115, 103, 240, 0.08), rgba(206, 159, 252, 0.16));
+      border: 1px solid var(--line);
+    }
+
+    .metrics-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+
+    .metric-card {
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255, 251, 245, 0.72);
+    }
+
+    .metric-card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .metric-card p {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .timeline-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+      align-items: stretch;
+    }
+
+    .timeline-card {
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      background: rgba(255, 251, 245, 0.84);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .timeline-card strong {
+      display: block;
+      font-size: 52px;
+      line-height: 0.95;
+      margin-bottom: 8px;
+      color: var(--accent-dark);
+    }
+
+    .timeline-card p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .cta {
+      margin-top: 18px;
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .cta p {
+      color: var(--muted);
+      line-height: 1.55;
+      margin-top: 8px;
+      max-width: 52ch;
+    }
+
+    footer {
+      padding: 12px 0 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .about-grid,
+      .stream-grid,
+      .deliverables-grid,
+      .metrics-grid,
+      .timeline-grid,
+      .cta {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: start;
+      }
+
+      .topbar-inner {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell { width: min(calc(100% - 20px), var(--max)); }
+      .hero-copy,
+      .hero-side,
+      .section-card,
+      .stream,
+      .deliverable,
+      .timeline-card,
+      .cta {
+        padding: 20px;
+      }
+
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand">DWH + BI Platform</div>
+      <nav class="nav" aria-label="Основная навигация">
+        <a href="project.html">Описание</a>
+        <a href="offer.html">Коммерческая</a>
+        <a href="#streams">Потоки работ</a>
+        <a href="#result">Результат</a>
+        <a href="#timeline">План</a>
+        <a href="gantt_quick.html">Диаграмма</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">GitHub Pages проект сайта</span>
+          <h1>Внедрение хранилища данных и отчетности</h1>
+          <p class="hero-text">
+            Статический сайт-представление проекта DWH + BI: целевая архитектура, потоки реализации,
+            ожидаемые результаты и интерактивный график поставки в одном GitHub Pages-контуре.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="gantt_quick.html">Открыть диаграмму проекта</a>
+            <a class="button secondary" href="offer.html">Открыть коммерческую страницу</a>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>10</strong>
+              <span>недель базового плана с контрольными вехами и зависимостями</span>
+            </div>
+            <div class="stat">
+              <strong>3</strong>
+              <span>параллельных потока: аналитика, платформа данных, запуск в сопровождение</span>
+            </div>
+            <div class="stat">
+              <strong>1</strong>
+              <span>единый источник правды для бизнеса, продукта и маркетинга</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-side">
+          <div>
+            <div class="mini-title">Фокус внедрения</div>
+            <div class="hero-list">
+              <div class="hero-item">
+                <strong>Стабильный контур данных</strong>
+                <span>Сбор, хранение, трансформация и проверка качества данных в управляемом DWH-ландшафте.</span>
+              </div>
+              <div class="hero-item">
+                <strong>Согласованные метрики</strong>
+                <span>Единая модель KPI и прозрачные правила расчета для BI, маркетинга и продуктовой команды.</span>
+              </div>
+              <div class="hero-item">
+                <strong>Эксплуатационная готовность</strong>
+                <span>Мониторинг, резервирование, приемка и передача процесса в рабочее сопровождение.</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-head">
+        <h2>О проекте</h2>
+        <p>Текущий контур аналитики закрывает задачи подрядчика, но не дает полноценного корпоративного стандарта по качеству данных, наблюдаемости и масштабированию под новые сценарии продукта.</p>
+      </div>
+      <div class="about-grid">
+        <article class="section-card">
+          <h3>Текущее состояние</h3>
+          <p>
+            На стороне заказчика уже работает отдельная аналитическая база, куда по расписанию загружаются
+            данные из Яндекс.Метрики, AppMetrica, Яндекс.Директа и продуктовой транзакционной БД.
+            Текущий ETL построен на Python-скриптах и cron-задачах.
+          </p>
+          <div class="pill-grid">
+            <span class="pill">Яндекс.Метрика</span>
+            <span class="pill">AppMetrica</span>
+            <span class="pill">Яндекс.Директ</span>
+            <span class="pill">Продуктовая БД</span>
+          </div>
+        </article>
+        <article class="section-card">
+          <h3>Целевая модель</h3>
+          <p>
+            Новый DWH + BI контур строится как независимая аналитическая платформа бизнеса: с формализованной
+            архитектурой, SLA, проверками качества, витринами данных и согласованной логикой расчетов.
+          </p>
+          <div class="pill-grid">
+            <span class="pill">Прозрачная архитектура</span>
+            <span class="pill">Контроль качества</span>
+            <span class="pill">Единый источник правды</span>
+            <span class="pill">Масштабируемые витрины</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="streams">
+      <div class="section-head">
+        <h2>Потоки работ</h2>
+        <p>Реализация идет параллельно по трем крупным стримам, чтобы не блокировать проект последовательной поставкой и быстрее выйти на проверяемый результат.</p>
+      </div>
+      <div class="stream-grid">
+        <article class="stream">
+          <div class="stream-number">1</div>
+          <h3>Аналитика и постановка задач</h3>
+          <p>Сбор требований, интервью, карта пути клиента, событийная модель, словарь метрик и постановка задач на доработку источников.</p>
+          <ul>
+            <li>Матрица доступов и обследование текущей отчетности</li>
+            <li>Карта событий и формулы KPI</li>
+            <li>ТЗ на web/mobile tracking и рекламные данные</li>
+          </ul>
+        </article>
+        <article class="stream">
+          <div class="stream-number">2</div>
+          <h3>Архитектура и техническая реализация</h3>
+          <p>Развертывание инфраструктуры, DWH-компонентов, подключение источников, построение слоев данных и витрин.</p>
+          <ul>
+            <li>Сервер, безопасность, Docker Compose и секреты</li>
+            <li>ClickHouse, Airflow, сырые и промежуточные слои</li>
+            <li>dbt-модели, витрины и тесты качества</li>
+          </ul>
+        </article>
+        <article class="stream">
+          <div class="stream-number">3</div>
+          <h3>Надежность и запуск</h3>
+          <p>Мониторинг, резервирование, приемочные испытания, операционный регламент и передача решения в сопровождение.</p>
+          <ul>
+            <li>Контроль загрузок и оповещения</li>
+            <li>Проверка восстановления и UAT</li>
+            <li>Промышленный запуск и SLA-модель</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="result">
+      <div class="section-head">
+        <h2>Что получает заказчик</h2>
+        <p>Результат проекта оформлен как операционно пригодная платформа, а не просто набор скриптов и разрозненных отчетов.</p>
+      </div>
+      <div class="deliverables-grid">
+        <article class="deliverable">
+          <h3>Платформа данных</h3>
+          <ul>
+            <li>Промышленный DWH-контур с регламентированной загрузкой</li>
+            <li>Проверяемые преобразования и витрины отчетности</li>
+            <li>Контроль качества, журнал отклонений и прозрачные правила расчета</li>
+          </ul>
+        </article>
+        <article class="deliverable">
+          <h3>BI и эксплуатация</h3>
+          <ul>
+            <li>Дашборды с согласованными метриками и логикой KPI</li>
+            <li>Мониторинг, резервирование и порядок реакции на инциденты</li>
+            <li>Документация и передача решения в операционное сопровождение</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="metric-band">
+        <div class="section-head">
+          <h2>Контур метрик</h2>
+          <p>Сайт фиксирует и аналитическую часть проекта: пользовательские, поведенческие, финансовые, воронковые и когортные показатели.</p>
+        </div>
+        <div class="metrics-grid">
+          <article class="metric-card">
+            <h3>Пользователь и канал</h3>
+            <p>User ID, UTM/source, устройство, гео, сегмент новый или возвращающийся пользователь.</p>
+          </article>
+          <article class="metric-card">
+          <h3>Поведение и воронка</h3>
+            <p>Последовательность действий, глубина просмотра, время между шагами, конверсии и drop-off по этапам.</p>
+          </article>
+          <article class="metric-card">
+            <h3>Финансы и LTV</h3>
+            <p>Пополнения, инвестиции, частота, доходность, удержание, повторные сделки и пожизненная ценность клиента.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="timeline">
+      <div class="section-head">
+        <h2>План и артефакты</h2>
+        <p>График проекта уже вынесен в отдельную интерактивную страницу. На лендинге оставлена навигация к ней и краткая структура основных этапов.</p>
+      </div>
+      <div class="timeline-grid">
+        <article class="timeline-card">
+          <strong>10 недель</strong>
+          <p>Базовый график охватывает запуск, архитектуру, построение витрин, BI, приемку и промышленный старт.</p>
+          <ul>
+            <li>Старт проекта и фиксация ролей</li>
+            <li>Архитектурное проектирование и подготовка платформы</li>
+            <li>Подключение источников, витрины, BI, UAT и запуск</li>
+          </ul>
+        </article>
+        <article class="timeline-card">
+          <h3>Доступные материалы</h3>
+          <ul>
+            <li>Интерактивная диаграмма проекта с деталями задач</li>
+            <li>CSV-файл с задачами для Excel, Google Sheets или Smartsheet</li>
+            <li>Текстовое описание проекта и целевого контура</li>
+          </ul>
+          <div class="hero-actions">
+            <a class="button primary" href="gantt_quick.html">Перейти к диаграмме</a>
+            <a class="button secondary" href="project.html">Открыть описание проекта</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="cta">
+        <div>
+          <h3>Готово для публикации в GitHub Pages</h3>
+          <p>После пуша в репозиторий можно включить публикацию через Settings → Pages и выбрать ветку main с корнем репозитория.</p>
+        </div>
+        <div class="hero-actions">
+          <a class="button primary" href="offer.html">Открыть коммерческую страницу</a>
+          <a class="button secondary" href="gantt_tasks.csv">Скачать CSV</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">
+    Статический сайт проекта DWH + BI для публикации через GitHub Pages.
+  </footer>
+</body>
+</html>
